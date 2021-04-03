@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "pm2 start src/index.js --watch",
+    "start": "node simpleUsage.js",
     "test": "istanbul cover jasmine --captureExceptions spec/core/*.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
