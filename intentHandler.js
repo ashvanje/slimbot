@@ -20,83 +20,83 @@ async function handleIntent(userText, sessionId, param) {
   if(!isMtrStopExist){
     response = await dialogflow.detectIntent(userText, sessionId)
     intent = `${response.intent}`
+    let route
+    if (intent == 'Default Fallback Intent') {
+      console.log(`............Default Fallback Intent`)
+      route = userText
+      var re = new RegExp("^[0-9]{1,6}$");
+      if (isCitybusRouteExist) {
+        returnMessage = await handleIntent('lookupBusRoute', sessionId, route)
+    
+      } else if (re.test(userText)) {
+        console.log("6 digit number");
+        console.log(".....before......");
+        returnMessage = await citybusHelper.getCitybusETAByStopByStopId(userText)
+        console.log(".....after......");
+        console.log(`.......returnMessage at HandleIntent: ${(returnMessage)}`);
+        console.log(".....after2......");
+      } else {
+        returnMessage = 'Please input a mtr station or a citybus / nwfb route.'
+      }
+      // try{
+      // returnMessage = `${JSON.stringify(await citybusHelper.getFirstLastStop('5X'))}`
+      // } catch (error){
+      //     console.log(`error1: ${JSON.stringify(error.message)}`)
+      //     throw error
+      //   }
+      // try{
+      // // returnMessage = `${JSON.stringify(await citybusHelper.postInOutboundStops('CTB', '5X'))}`
+      // // const stopsOfBus = await citybusHelper.getEta('5X', 'outbound', 2)
+      // // const stopsOfBus = await citybusHelper.getFullStopIdListWithStopName('5X','outbound')
+      
+      // const stopsOfBus = await citybusHelper.getEta('5X','outbound',10)
+      // route = userText
+      // returnMessage = `${JSON.stringify(stopsOfBus, null, 2)}`
+      // } catch (error) {
+      //   console.log(`error1: ${JSON.stringify(error.message)}`)
+      //   throw error
+      // }
+      // returnMessage = await mtrHelper.getMtrRoutesByMtrStopChinese(userText)
+      // var re = new RegExp("^[0-9]{1,6}$");
+      // if (re.test(userText)) {
+      //     console.log("6 digit number");
+      //     returnMessage = await searchCTBStopEta(userText, sessionId)
+      // } else {
+      //   console.log("not 6 digit number");
+      //   returnMessage = await searchMtrStopEta(userText, sessionId)
+      //   if (returnMessage == '0') {
+      //     returnMessage = await handleIntent('I want to make an enquiry', sessionId)
+      //   }
+      // }
+    } else if (intent == 'lookupBusRoute') {
+      route = param
+      if (route) {
+        returnMessage = await handleIntent(route, sessionId)
+      } else {
+        returnMessage = await handleIntent('bizRuleDirection', sessionId)
+      }
+    } else if (intent == 'bizRuleDirection') {
+      console.log(`........intent is bizRuleDirection`)
+      returnMessage = await handleBizRuleDirection(response, sessionId)
+    } else if (intent == 'bizRuleStop') {
+      console.log(`........intent is bizRuleStop`)
+      returnMessage = await handleBizRuleStop(response, sessionId)
+    } else if (intent == 'availableEnquiries') {
+      returnMessage = await handleAvailableEnquiries(response, sessionId)
+    } else if (intent == 'route') {
+      returnMessage = await handleRoute(response, sessionId)
+    } else if (intent == 'direction') {
+      returnMessage = await handleDirection(response, sessionId)
+    } else if (intent == 'stop') {
+      returnMessage = await handleStop(response, sessionId)
+    } else {
+      console.log('@@@@@@@@ not handled intent')
+      returnMessage = response.dialogFlowFulfillmentMessage
+    }
   } else {
     returnMessage = await mtrHelper.getMtrRoutesByMtrStopChinese(userText)
     console.log(`............returnMessage at handleIntent for isMtrStopExist: ${returnMessage}`)
 
-  }
-  let route
-  if (intent == 'Default Fallback Intent') {
-    console.log(`............Default Fallback Intent`)
-    route = userText
-    var re = new RegExp("^[0-9]{1,6}$");
-    if (isCitybusRouteExist) {
-      returnMessage = await handleIntent('lookupBusRoute', sessionId, route)
-  
-    } else if (re.test(userText)) {
-      console.log("6 digit number");
-      console.log(".....before......");
-      returnMessage = await citybusHelper.getCitybusETAByStopByStopId(userText)
-      console.log(".....after......");
-      console.log(`.......returnMessage at HandleIntent: ${(returnMessage)}`);
-      console.log(".....after2......");
-    } else {
-      returnMessage = 'Please input a mtr station or a citybus / nwfb route.'
-    }
-    // try{
-    // returnMessage = `${JSON.stringify(await citybusHelper.getFirstLastStop('5X'))}`
-    // } catch (error){
-    //     console.log(`error1: ${JSON.stringify(error.message)}`)
-    //     throw error
-    //   }
-    // try{
-    // // returnMessage = `${JSON.stringify(await citybusHelper.postInOutboundStops('CTB', '5X'))}`
-    // // const stopsOfBus = await citybusHelper.getEta('5X', 'outbound', 2)
-    // // const stopsOfBus = await citybusHelper.getFullStopIdListWithStopName('5X','outbound')
-    
-    // const stopsOfBus = await citybusHelper.getEta('5X','outbound',10)
-    // route = userText
-    // returnMessage = `${JSON.stringify(stopsOfBus, null, 2)}`
-    // } catch (error) {
-    //   console.log(`error1: ${JSON.stringify(error.message)}`)
-    //   throw error
-    // }
-    // returnMessage = await mtrHelper.getMtrRoutesByMtrStopChinese(userText)
-    // var re = new RegExp("^[0-9]{1,6}$");
-    // if (re.test(userText)) {
-    //     console.log("6 digit number");
-    //     returnMessage = await searchCTBStopEta(userText, sessionId)
-    // } else {
-    //   console.log("not 6 digit number");
-    //   returnMessage = await searchMtrStopEta(userText, sessionId)
-    //   if (returnMessage == '0') {
-    //     returnMessage = await handleIntent('I want to make an enquiry', sessionId)
-    //   }
-    // }
-  } else if (intent == 'lookupBusRoute') {
-    route = param
-    if (route) {
-      returnMessage = await handleIntent(route, sessionId)
-    } else {
-      returnMessage = await handleIntent('bizRuleDirection', sessionId)
-    }
-  } else if (intent == 'bizRuleDirection') {
-    console.log(`........intent is bizRuleDirection`)
-    returnMessage = await handleBizRuleDirection(response, sessionId)
-  } else if (intent == 'bizRuleStop') {
-    console.log(`........intent is bizRuleStop`)
-    returnMessage = await handleBizRuleStop(response, sessionId)
-  } else if (intent == 'availableEnquiries') {
-    returnMessage = await handleAvailableEnquiries(response, sessionId)
-  } else if (intent == 'route') {
-    returnMessage = await handleRoute(response, sessionId)
-  } else if (intent == 'direction') {
-    returnMessage = await handleDirection(response, sessionId)
-  } else if (intent == 'stop') {
-    returnMessage = await handleStop(response, sessionId)
-  } else {
-    console.log('@@@@@@@@ not handled intent')
-    returnMessage = response.dialogFlowFulfillmentMessage
   }
   // console.log(`............returnMessage at handleIntent before returning: ${JSON.stringify(returnMessage)}`)
 

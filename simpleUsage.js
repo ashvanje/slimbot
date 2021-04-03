@@ -24,8 +24,20 @@ slimbot.on('message', async message => {
 
   console.log(sendMessageResponse)
 
+  let optionalParams = {
+    // parse_mode: 'MarkdownV2',
+    disable_web_page_preview: true,
+    disable_notification: true,
+    // reply_to_message_id: 1234,
+    reply_markup: {
+      inline_keyboard: [[
+        { text: 'Today', callback_data: 'pick_today' },
+        { text: 'Pick a date', callback_data: 'pick_date' }
+      ]]
+    }
+  }
   // slimbot.sendMessage(message.chat.id, `reply /hello`);
-  slimbot.sendMessage(message.chat.id, sendMessageResponse.substring(0,4095));
+  slimbot.sendMessage(message.chat.id, sendMessageResponse.substring(0,4095),optionalParams);
   //todo: add slash before the choice buttons
   } catch (e) {
     console.log(JSON.stringify(e))

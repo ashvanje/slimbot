@@ -2803,7 +2803,7 @@ function findMtrStopsByStationName(mtrStopChinese, mtrStopEnglish, bound) {
 
   if (mtrStopChinese==null) {
     console.log(`condition 1 - !mtrStopChinese`)
-    return mtrStops.filter(function(x){return x.stationName==mtrStopEnglish && x.bound == bound})
+    return mtrStops.filter(function(x){return x.stationName.toLowerCase()==mtrStopEnglish.toLowerCase() && x.bound == bound})
   } else if (mtrStopEnglish==null) {
     console.log(`condition 2 - !mtrStopEnglish`)
     return mtrStops.filter(function(x){return x.stationChineseName==mtrStopChinese && x.bound == bound})
