@@ -101,3 +101,25 @@ function checkRemainingQuotaForNumber(from) {
   console.log(`checking remaining quota for ${from}...`)
   return true
 }
+
+const restify = require('restify');
+
+let server = restify.createServer();
+// server.use(restify.bodyParser());
+
+// Setup webhook integration
+// slimbot.setWebhook({ url: 'https://www.example.com/bot_updates' });
+
+// Get webhook status
+// slimbot.getWebhookInfo();
+
+// Handle updates (example)
+server.get('/bot_updates', function handle(req, res) {
+  let update = req.body;
+  // handle type of update here...
+  // i.e. if (update.message) { ... }
+  res.send('hello ');
+  // next();
+});
+
+server.listen(8443);
