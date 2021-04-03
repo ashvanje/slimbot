@@ -24,10 +24,23 @@
     "test": "istanbul cover jasmine --captureExceptions spec/core/*.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "dependencies": {
+    "axios": "^0.20.0",
+    "bent": "^7.3.12",
     "bluebird": "^3.7.2",
+    "brainly-scraper-ts": "^1.0.3",
+    "dotenv": "^8.2.0",
     "eventemitter3": "^4.0.7",
+    "express": "^4.17.1",
+    "google-oauth-jwt": "^0.2.0",
+    "lodash": "^4.17.20",
+    "mime-types": "^2.1.27",
+    "moment": "^2.29.1",
+    "mongoose": "^5.10.15",
+    "node-emoji": "^1.10.0",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
+    "slimbot": "^5.1.0",
     "socks5-https-client": "^1.2.1"
   },
   "devDependencies": {
