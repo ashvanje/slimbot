@@ -53,7 +53,7 @@ async function getMtrRoutesByMtrStopChinese(mtrStop) {
     console.log(`mtrLineArr: ${JSON.stringify(mtrLineArr, null, 2)}`)
     return returnResponseForMtrEta(mtrLineArr)
   } else {
-    return '只支援 _機場快線_ / 東涌線 / 將軍澳線 / 西鐵線' + emoji.find('train').emoji
+    return '只支援 機場快線 / 東涌線 / 將軍澳線 / 西鐵線' + emoji.find('train').emoji
   }
   
 }
@@ -70,7 +70,7 @@ function returnResponseForMtrEta(mtrLineArr) {
         //element example: {station:'LOHAS PARK', eta: {destination, minutesLeft...}}
         resultString = resultString + `${element.station} ${element.stationEn} `
         for (var eta of element.eta) {
-          resultString = resultString + `_${splitMinutesLeft(eta.minutesLeft)}_ `
+          resultString = resultString + `${splitMinutesLeft(eta.minutesLeft)} `
         }
         resultString = resultString + `
 `
