@@ -29,6 +29,7 @@ async function getMtrRoutesFromDBByStationName(mtrStop) {
   }
   return routes
 }
+
 async function getMtrRoutesByMtrStopChinese(mtrStop) {
   await connectMongo();
   let routes = await getMtrRoutesFromDBByStationName(mtrStop)
@@ -51,16 +52,16 @@ async function getMtrRoutesByMtrStopChinese(mtrStop) {
       }
     } // end of looping routes in a station
     console.log(`mtrLineArr: ${JSON.stringify(mtrLineArr, null, 2)}`)
-    return returnResponseForMtrEta(mtrLineArr)
+    return returnResponseForMtrEta(mtrLineArr, mtrStop)
   } else {
     return '只支援 機場快線 / 東涌線 / 將軍澳線 / 西鐵線' + emoji.find('train').emoji
   }
   
 }
 
-function returnResponseForMtrEta(mtrLineArr) {
+function returnResponseForMtrEta(mtrLineArr, mtrStop) {
   console.log(`returnResponseForMtrEta start`)
-  let resultString = ``
+  let resultString = `From *${mtrStop}*`
   for (var mtrLine of mtrLineArr) { //loop line
     resultString = resultString + `
 *${mtrLineCodeToChineseName(mtrLine.line) + emoji.find('train').emoji}* 往 To
@@ -75,6 +76,8 @@ function returnResponseForMtrEta(mtrLineArr) {
         resultString = resultString + `
 `
       }
+    } else {
+      // resultString = resultString + '(The API is out of service)'
     }
 
     if (mtrLine.eta[1].eta.length > 0) {
@@ -87,6 +90,8 @@ function returnResponseForMtrEta(mtrLineArr) {
         resultString = resultString + `
 `
       }
+    } else {
+      // resultString = resultString + '(The API is out of service)'
     }
   }
   console.log(`returnResponseForMtrEta: ${resultString}`)

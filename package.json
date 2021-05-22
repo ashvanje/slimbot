@@ -36,6 +36,7 @@
     "mime-types": "^2.1.27",
     "moment": "^2.29.1",
     "mongoose": "^5.10.15",
+    "node-cron": "^3.0.0",
     "node-emoji": "^1.10.0",
     "node-fetch": "^2.6.1",
     "request": "^2.88.2",

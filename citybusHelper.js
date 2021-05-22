@@ -150,6 +150,7 @@ async function postInOutboundStops(company2, route2) {
 }
 
 async function isCitybusRouteExist(route) {
+  console.log(`isCitybusRouteExist begin`)
   let isRouteExist = (await getBusCompany(route) !== '')
 
   console.log(`isCitybusRouteExist: ${isRouteExist}`)
