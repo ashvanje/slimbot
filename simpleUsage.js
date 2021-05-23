@@ -6,6 +6,7 @@ const dialogflow = require('./dialogflow')
 const apiHandler = require('./apiHandler')
 const intentHandler = require('./intentHandler')
 const cron = require('node-cron');
+const moment = require('moment')
 
 var mongoConnection
 
@@ -23,7 +24,8 @@ slimbot.on('message', async message => {
   console.log(JSON.stringify(message, 0, 1))
   try {
     slimbot.sendMessage(message.chat.id, 'wait...');
-    const sendMessageResponse = await sendMessage(message.text.replace('/', ''), message.from.username + sessionChange)
+    // const sendMessageResponse = await sendMessage(message.text.replace('/', ''), message.from.username + sessionChange)
+    const sendMessageResponse = await sendMessage(message.text.replace('/', ''), message.chat.id)
 
     console.log(sendMessageResponse)
 
@@ -133,73 +135,49 @@ server.get('/bot_updates', function handle(req, res) {
 });
 
 // cron.schedule('* * * * * *', function() {
-let userCron = [
-  {
-    messageId: '52656153',
-    cron: '5,10 * * * * *',
-    station: 'Nam Cheong'
-  }
-  ,
+let etaReminderArr = [
+  // {
+  //   messageId: '52656153',
+  //   startTime: '08:00',
+  //   endTime: '18:30',
+  //   station: 'Nam Cheong'
+  // }
+  // ,
 
   {
     messageId: '52656153',
-    cron: '*/5 8-9 * * *',
-    station: 'Nam Cheong'
+    startTime: '18:00',
+    endTime: '19:30',
+    station: 'Tung Chung'
   }
+  
 ]
 
-// for (userCron of userCrons) {
-//   console.log(`userCron #####: ${JSON.stringify(userCron)}`)
-
-
-
-
-// for (var i = 0; i < 2; i++) {
-//   i = 0
-//   cron.schedule(userCron[i].cron, async function () {
-//     console.log(`userCron @@@@@@@@@: ${JSON.stringify(userCron[i])}`)
-//     await connectMongo()
-//     console.log(`begin cron`)
-//     try {
-//       const sendMessageResponse = await sendMessage(userCron[i].station, '666666')
-
-//       console.log(`sendMessageResponse: ${sendMessageResponse}`)
-
-//       let optionalParams = {
-//         parse_mode: 'Markdown'
-//       };
-//       slimbot.sendMessage(userCron[i].messageId, sendMessageResponse.substring(0, 4095), optionalParams);
-//     } catch (error) {
-//       console.log(`${JSON.stringify(error)}`)
-//     }
-//   })
-// }
-
-
-
-
-
-
-cron.schedule(userCron[1].cron, async function () {
-  console.log(`userCron @@@@@@@@@: ${JSON.stringify(userCron[1])}`)
+cron.schedule('*/10 * * * *', async function () {
   await connectMongo()
-  console.log(`begin cron`)
-  try {
-    const sendMessageResponse = await sendMessage(userCron[1].station, '666666')
-
-    console.log(`sendMessageResponse: ${sendMessageResponse}`)
-
-    let optionalParams = {
-      parse_mode: 'Markdown'
-    };
-    slimbot.sendMessage(userCron[1].messageId, sendMessageResponse.substring(0, 4095), optionalParams);
-  } catch (error) {
-    console.log(`${JSON.stringify(error)}`)
+  for (etaReminder of etaReminderArr) {
+    console.log(`etaReminder.startTime: ${etaReminder.startTime}, etaReminder.endTime: ${etaReminder.endTime}`)
+    let start = moment(etaReminder.startTime, 'hh:mm')
+    let end = moment(etaReminder.endTime, 'hh:mm')
+    let current = new Date()
+    console.log(`start: ${start<current}, end: ${end<current}, current: ${current}`)
+    if (start < current && current < end) {
+      try {
+        const sendMessageResponse = await sendMessage(etaReminder.station, '666666')
+    
+        console.log(`sendMessageResponse: ${sendMessageResponse}`)
+    
+        let optionalParams = {
+          parse_mode: 'Markdown'
+        };
+        slimbot.sendMessage(etaReminder.messageId, sendMessageResponse.substring(0, 4095), optionalParams);
+      } catch (error) {
+        console.log(`${JSON.stringify(error)}`)
+      }
+    }
+    
   }
+  
 })
-
-// slimbot.sendMessage('52656153', 'test message from cron', {"parse_mode":"Markdown"});
-// }
-// });
 
 server.listen(process.env.PORT || 3000);

@@ -10,8 +10,8 @@ var govhkmtrstopschema = new mongoose.Schema({}, { strict: false });
 var govhkmtrstopmodel = mongoose.model("govhkmtrstop", govhkmtrstopschema);
 var mongoConnection;
 
-var mtrStopSchema = new mongoose.Schema({line:String, bound:String, stationName:String, stationCode: String});
-var mtrStopModel = mongoose.model("MtrStop", mtrStopSchema);
+// var mtrStopSchema = new mongoose.Schema({line:String, bound:String, stationName:String, stationCode: String});
+// var mtrStopModel = mongoose.model("MtrStop", mtrStopSchema);
 
 async function isMtrStopExist(mtrStop) {
   let routes = await getMtrRoutesFromDBByStationName(mtrStop)

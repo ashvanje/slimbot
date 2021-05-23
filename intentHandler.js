@@ -5,6 +5,13 @@ const dialogflow = require('./dialogflow')
 const citybusHelper = require('./citybusHelper')
 const { citybus } = require('./constants')
 
+var mongoose = require("mongoose");
+// var reminderSchema = new mongoose.Schema({}, { strict: false });
+// var reminderModel = mongoose.model("reminder", reminderSchema);
+
+var mtrStopSchema = new mongoose.Schema({line:String, bound:String, stationName:String, stationCode: String}, { strict: false });
+var mtrStopModel = mongoose.model("reminder", mtrStopSchema);
+
 async function handleIntent(userText, sessionId, param) {
   //isCitybusRouteExist
   //isMtrStopExist
@@ -89,6 +96,8 @@ async function handleIntent(userText, sessionId, param) {
       returnMessage = await handleDirection(response, sessionId)
     } else if (intent == 'stop') {
       returnMessage = await handleStop(response, sessionId)
+    } else if (intent == 'mtrReminder') {
+      returnMessage = await handleMtrReminder(response, sessionId)
     } else {
       console.log('@@@@@@@@ not handled intent')
       returnMessage = response.dialogFlowFulfillmentMessage
@@ -103,6 +112,43 @@ async function handleIntent(userText, sessionId, param) {
   return returnMessage
 }
 
+async function handleMtrReminder(response, sessionId) {
+  console.log(`handleMtrReminder`)
+  // await connectMongo();
+  let dialogFlowFulfillmentMessage = `${response.dialogFlowFulfillmentMessage}`
+  let returnMessage = ''
+  let outputContexts = response.outputContexts
+  let intent = `${response.intent}`
+  console.log(`response: ${JSON.stringify(response)}`)
+  console.log(`sessionId: ${JSON.stringify(sessionId)}`)
+  console.log(`direction`)
+  if (dialogFlowFulfillmentMessage.includes("biz")) {
+    console.log(`response.parameters: ${JSON.stringify(response.parameters)}`)
+    console.log(`direction 1`)
+    returnMessage = await handleIntent('bizRuleStop', sessionId)
+  } else {
+    console.log(`direction 2`)
+  // await connectMongo();
+  console.log(`direction 5`)
+  var callback = function (err, data) {
+    if (err)
+      console.log(err);
+    else
+      console.log(data);
+  }
+  mongoose.Promise = global.Promise;
+  var testPayment = new mtrStopModel({messageId: sessionId, startTime: response.parameters});
+  var saveResult = await testPayment.save(callback);
+
+  console.log(`finish mongo call...${JSON.stringify(routesByStopId)}`)
+  console.log(`reminderModelResult: ${JSON.stringify(reminderModelResult)}`)
+    // console.log(`direction: ${JSON.stringify(direction.data)}`)
+    returnMessage =
+      `Sure.`
+  }
+
+  return returnMessage
+}
 
 async function handleLookupBusRoute(response, sessionId) {
   let dialogFlowFulfillmentMessage = `${response.dialogFlowFulfillmentMessage}`
