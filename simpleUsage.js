@@ -153,7 +153,7 @@ let etaReminderArr = [
   {
     messageId: '52656153',
     startTime: '11:30',
-    endTime: '13:00',
+    endTime: '12:30',
     station: 'Tung Chung'
   },
   {
@@ -165,7 +165,7 @@ let etaReminderArr = [
   
 ]
 
-cron.schedule('*/5 * * * *', async function () {
+cron.schedule('* * * * *', async function () {
   await connectMongo()
   for (etaReminder of etaReminderArr) {
     console.log(`etaReminder.startTime: ${etaReminder.startTime}, etaReminder.endTime: ${etaReminder.endTime}`)
