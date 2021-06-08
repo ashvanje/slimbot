@@ -144,16 +144,28 @@ let etaReminderArr = [
   // }
   // ,
 
+  // {
+  //   messageId: '52656153',
+  //   startTime: '18:00',
+  //   endTime: '19:30',
+  //   station: 'Tung Chung'
+  // },
   {
     messageId: '52656153',
-    startTime: '18:00',
-    endTime: '19:30',
+    startTime: '11:30',
+    endTime: '13:00',
     station: 'Tung Chung'
+  },
+  {
+    messageId: '52656153',
+    startTime: '01:00',
+    endTime: '01:50',
+    station: 'Nam Cheong'
   }
   
 ]
 
-cron.schedule('*/10 * * * *', async function () {
+cron.schedule('*/5 * * * *', async function () {
   await connectMongo()
   for (etaReminder of etaReminderArr) {
     console.log(`etaReminder.startTime: ${etaReminder.startTime}, etaReminder.endTime: ${etaReminder.endTime}`)
