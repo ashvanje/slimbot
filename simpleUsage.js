@@ -152,14 +152,14 @@ let etaReminderArr = [
   // },
   {
     messageId: '52656153',
-    startTime: '11:30',
-    endTime: '12:30',
+    startTime: '10:30',
+    endTime: '11:30',
     station: 'Tung Chung'
   },
   {
     messageId: '52656153',
-    startTime: '01:00',
-    endTime: '01:50',
+    startTime: '00:00',
+    endTime: '00:50',
     station: 'Nam Cheong'
   }
   
